@@ -7,6 +7,30 @@
 
 include_once("movablecite.php");
 
+function get_first_strings($string, $num_strings) {
+    $strings = explode(" ", $string);
+    $result_string = $strings[0];
+
+    for($string_loop = 1; $string_loop < $num_strings; $string_loop ++) {
+        $result_string.=" ".$strings[$string_loop];
+    }
+
+    return $result_string;
+}
+
+function get_last_strings($string, $num_strings) {
+    $strings = explode(" ", $string);
+    $string_count = count($strings);
+
+    $result_string = $strings[$num_strings];
+
+    for($string_loop = ($string_count - 1); $string_loop < ($string_count - 1) - $num_strings; $string_loop ++) {
+        $result_string = $strings[$string_loop]." ".$result_string;
+    }
+
+    return $result_string;
+}
+
 $xml = simplexml_load_file(CITATAIONS_FILE);
 
 // Posted elements via HTTP
@@ -27,12 +51,45 @@ for($my_array_loop = 0; $my_array_loop < $num_objects; $my_array_loop ++) {
     array_push($post_array, $citation_element);
 }
 
+// URL verification phase
+
+$current_post_array_index = 0;
+
+foreach($post_array as $citation_element) {
+    $website_content = file_get_contents($citation_element->url);
+
+    $first_words = get_first_strings($citation_element->cite, DEFAULT_CITATAION_SEARCH_WORDS);
+    $last_words = get_last_strings($citation_element->cite, DEFAULT_CITATAION_SEARCH_WORDS);
+
+    $first_words_pos = 0;
+    $last_words_pos = 0;
+
+    do {
+        $first_words_pos = strrpos($website_content, $first_words, $first_words_pos);
+        $last_words_pos = strrpos($website_content, $last_words, $first_words_pos);
+    }
+    while($first_words_pos >= $last_words_pos);
+
+    $citation = substr($website_content, $first_words_pos, $last_words_pos);
+
+    if($citation_element->current_cite != $citation) {
+        $post_array[$current_post_array_index]->current_cite = $citation;
+        $post_array[$current_post_array_index]->modified = true;
+    }
+
+    $current_post_array_index ++;
+}
+
 foreach($xml->children() as $xml_child) {
+    $current_post_array_index = 0;
+
     foreach($post_array as $citation) {
 
         $current_element = new Citation_Element();
+        $current_element->modified = false;
+        $current_element->added = false;
 
-        foreach($xml_child as $xml_citation_child) {
+        foreach($xml_child->children() as $xml_citation_child) {
             switch($xml_citation_child->getName()) {
                 case "cite":
                     $current_element->cite = $xml_citation_child;
@@ -60,12 +117,14 @@ foreach($xml->children() as $xml_child) {
         else {
             array_push($addition_array, $current_element);
         }
+
+        $current_post_array_index ++;
     }
 }
 
 // Update elements that need to update in the XML
 
-$xml_string = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
+$xml_string = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><citations>";
 
 foreach($xml as $xml_child) {
     foreach($update_array as $update_array_element) {
@@ -102,5 +161,7 @@ foreach($xml as $xml_child) {
 foreach($addition_array as $addition_element) {
     $xml_string.="<citation><cite>".$addition_element->cite."</cite><url>".$addition_element->url."</url><currentcite>".$addition_element->current_cite."</currentcite></citation>";
 }
+
+$xml_string.="</citations>";
 
 file_put_contents(CITATAIONS_FILE, $xml_string);
