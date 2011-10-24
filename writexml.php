@@ -99,4 +99,8 @@ foreach($xml as $xml_child) {
     }
 }
 
+foreach($addition_array as $addition_element) {
+    $xml_string.="<citation><cite>".$addition_element->cite."</cite><url>".$addition_element->url."</url><currentcite>".$addition_element->current_cite."</currentcite></citation>";
+}
+
 file_put_contents(CITATAIONS_FILE, $xml_string);
