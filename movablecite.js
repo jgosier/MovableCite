@@ -4,12 +4,12 @@
  * Time: 10:50 AM
  */
 
-// Default number of words to search for from the start to end of the string
-var default_number_of_search_words = 3;
 // URL pointing to the read script
 var server_read_url = "http://localhost:8888/trials/readxml.php"
 // URL pointing to the write script
 var server_write_url = "http://localhost:8888/trials/writexml.php"
+
+// Data types
 
 function Citation_Element(cite, url, current_cite) {
     this.cite = cite;
@@ -21,6 +21,8 @@ function Blockquote_Element(cite, block_text) {
     this.cite = cite;
     this.block_text = block_text;
 }
+
+// Utility functions
 
 function fetch_content_from_url(url) {
     var response = "";
@@ -39,6 +41,8 @@ function trim_string(text_to_trim) {
 function read_from_file() {
     return fetch_content_from_url(server_read_url);
 }
+
+// Sends to server
 
 function write_XML(xml_objects) {
     var req;
@@ -82,6 +86,8 @@ function write_XML(xml_objects) {
     }
 }
 
+// Processes XML sent from server
+
 function read_XML() {
     var XML_String = read_from_file();
 
@@ -113,6 +119,8 @@ function read_XML() {
     }
 }
 
+// Main function
+
 function bodyLoaded() {
     var all_elements = document.getElementsByTagName("*");
     var num_elements = all_elements.length;
@@ -121,6 +129,8 @@ function bodyLoaded() {
     this.citations = new Array();
 
     this.blockquote_elements = new Array();
+
+    // Find all blockquote elements
 
     for(element_loop = 0; element_loop < num_elements; element_loop++) {
 
