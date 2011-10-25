@@ -15,6 +15,11 @@ class Citation_Element {
     public $modified;
     public $added;
 
+    public $first_words;
+    public $last_words;
+
+    public $citation_found;
+
     public function __construct($cite = "", $url = "", $current_cite = "") {
         $this->cite = $cite;
         $this->url = $url;

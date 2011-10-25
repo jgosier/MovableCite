@@ -5,9 +5,9 @@
  */
 
 // URL pointing to the read script
-var server_read_url = "http://localhost:8888/trials/readxml.php"
+var server_read_url = "http://localhost/movablecite/readxml.php"
 // URL pointing to the write script
-var server_write_url = "http://localhost:8888/trials/writexml.php"
+var server_write_url = "http://localhost/movablecite/writexml.php"
 
 // Data types
 
