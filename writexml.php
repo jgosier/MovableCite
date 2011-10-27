@@ -1,8 +1,9 @@
 <?php
 /**
- * (C) 2011 Ahmed Maawy
+ * Copyright 2011 Jon Gosier & Ahmed Maawy
+ * Coded by Ahmed Maawy
  * Date: 10/23/11
- * Time: 10:36 PM
+ * Time: 10:50 AM
  */
 
 include_once("movablecite.php");
