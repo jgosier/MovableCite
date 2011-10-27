@@ -1,0 +1,31 @@
+****************************************************
+Movablecite.js | Keeping Web Citations in Sync!
+****************************************************
+
+This product helps solve a problem of citation on the web. For instance, if one website or blog quotes text from another, how can you ensure that your quote stays updated when the remote original is modified?
+
+This functionality helps prevent the propagation of misinformation, as updates and edits are securely pushed to any website that has quoted the original body of text. These libraries are dead simple to use for any HTML5 compliant website. We also offer modules for Wordpress, Drupal, Joomla and other CMS platforms.
+
+---------------//
+How It Works
+---------------//
+
+	1. Collect all < blockquotes /> on a page.
+	2. Crawls all cite tags and cited text.
+	3. Submits them to your server for processing.
+	4. Stores the citations in an always up-to-date XML file.
+
+---------------//
+Configuration
+---------------//
+
+Deploy these files: jQuery, movablecite.js, movablecite.php, writexml.php and readxml.php on the server. In the movablecite.js file configure the following variables:
+
+	1. server_read_url to point to readxml.php
+	2. server_write_url to point to writexml.php
+
+In the movablecite.php configure the following:
+
+	1. CITATAIONS_FILE : To point to the XML file you want citations stored
+	2. DEFAULT_CITATAION_SEARCH_WORDS : Number of keywords in the beginning and end of any citation to search for in the citation site.
+	3. readxml.php renders the XML file to the client that requests this XML, so that they can use the XML file to do as they wish.
